@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import router from './routes/user.routes.js';
 import authRoute from "./routes/auth.routes.js"
 dotenv.config();
@@ -8,8 +9,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// For handling CORS error
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}))
+
+// For parsing the request body
 app.use(express.json());
 
+// Routes
 app.use("/api/user", router)
 app.use("/api/auth", authRoute)
 
