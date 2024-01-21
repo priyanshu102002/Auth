@@ -2,21 +2,36 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 const SignUp = () => {
     const [formData, setFormData] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(false);
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch("http://localhost:3000/api/auth/signup", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-        });
-        const data = await response.json();
-        console.log(data);
+        try {
+            setIsLoading(true);
+            setError(false);
+            const response = await fetch(
+                "http://localhost:3000/api/auth/signup",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                }
+            );
+            const data = await response.json();
+            console.log(data);
+            setIsLoading(false);
+            if (data.success === false) setError(true);
+        } catch (error) {
+            setIsLoading(false);
+            setError(true);
+        }
     };
 
     return (
@@ -44,8 +59,11 @@ const SignUp = () => {
                     onChange={handleChange}
                     className="p-4 bg-slate-100 rounded-lg outline-none"
                 />
-                <button className="p-4 bg-slate-700 text-white rounded-xl uppercase font-semibold hover:bg-slate-800 transition-transform">
-                    Sign up
+                <button
+                    disabled={isLoading}
+                    className="p-4 bg-slate-700 text-white rounded-xl uppercase font-semibold hover:bg-slate-800 transition-transform disabled:bg-slate-500"
+                >
+                    {isLoading ? "Loading..." : "Sign up"}
                 </button>
             </form>
             <div className="flex gap-1 mt-4">
@@ -54,6 +72,9 @@ const SignUp = () => {
                     <span className="text-blue-500 font-semibold">Sign in</span>
                 </Link>
             </div>
+            <p className="mt-2 text-red-600 font-semibold">
+                {error && "Something went wrong!"}
+            </p>
         </div>
     );
 };
