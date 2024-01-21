@@ -22,7 +22,6 @@ const SignIn = () => {
         e.preventDefault();
         try {
             dispatch(signInStart());
-
             const response = await fetch(
                 "http://localhost:3000/api/auth/signin",
                 {

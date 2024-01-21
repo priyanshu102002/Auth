@@ -31,6 +31,6 @@
 - Sending the response into frontend and redirecting into home page
 - Sending the token into frontend through cookie
 
-- Saving data using redux (cookie)
-
+- Saving data using redux and remove all useState
+- Saving the data presistently using redux-persist after refreshing the page
 
