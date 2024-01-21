@@ -63,3 +63,49 @@ export const signin = async (req, res, next) => {
         next(error);
     }
 };
+
+export const google = async (req, res, next) => {
+
+    try {
+        // Checking if the user exists or not 
+        const user = await User.findOne({ email: req.body.email });
+        if (user) {
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+            const { password: hashedPassword, ...rest } = user._doc;
+            const cookieOptions = {
+                expires: new Date(Date.now() + 60 * 60 * 1000), //1hr
+                httpOnly: true
+            }
+            res.cookie("access_token", token, cookieOptions).status(200).json(rest);
+        } else {
+            // If the user doesn't exist then we will create a new user
+
+            // Generating a random password coz google doesn't provide password
+            const generatedPassword = Math.random().toString(36).slice(-8);
+            const hashedPassword = await bcryptjs.hash(generatedPassword, 12);
+            // name, email and photo are coming from the frontend google auth
+            const newUser = new User({
+                // Priyanshu Kumar => priyanshukumar5398
+                username: req.body.name.split(" ").join("").toLowerCase() + Math.floor(Math.random() * 1000).toString(),
+                email: req.body.email,
+                password: hashedPassword,
+                profilePicture: req.body.photo
+            });
+
+            // Saving the user to the database
+            await newUser.save();
+
+            // Sending the token
+            const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+            const { password: hashedPassword2, ...rest } = newUser._doc;
+            const cookieOptions = {
+                expires: new Date(Date.now() + 60 * 60 * 1000), //1hr
+                httpOnly: true
+            }
+            res.cookie("access_token", token, cookieOptions).status(200).json(rest);
+
+        }
+    } catch (error) {
+        next(error);
+    }
+};
