@@ -39,8 +39,10 @@ const Profile = () => {
                 </button>
             </form>
             <div className="flex justify-between mt-4">
-              <span className="text-red-500 cursor-pointer">Delete Account</span>
-              <span className="text-red-500 cursor-pointer">Sign Out</span>
+                <span className="text-red-500 cursor-pointer">
+                    Delete Account
+                </span>
+                <span className="text-red-500 cursor-pointer">Sign Out</span>
             </div>
         </div>
     );
