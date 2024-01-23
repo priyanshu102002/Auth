@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import router from './routes/user.routes.js';
 import authRoute from "./routes/auth.routes.js"
+import cookieParser from 'cookie-parser';
 dotenv.config();
 
 const app = express();
@@ -17,6 +18,8 @@ app.use(cors({
 
 // For parsing the request body
 app.use(express.json());
+// For parsing the cookie
+app.use(cookieParser());
 
 // Routes
 app.use("/api/user", router)
