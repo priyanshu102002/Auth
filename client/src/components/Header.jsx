@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 const Header = () => {
     const { currentUser } = useSelector((state) => state.user);
-    console.log(currentUser);
     return (
         <div className="bg-slate-300">
             <div className="flex justify-between px-8 py-6 text-xl items-center">
@@ -19,7 +18,14 @@ const Header = () => {
                         <li>About</li>
                     </Link>
                     <Link to="/profile">
-                        {currentUser ? (<img className="rounded-full w-7 h-7 object-cover" src={currentUser.profilePicture} />) : <li>Sign In</li>}
+                        {currentUser ? (
+                            <img
+                                className="rounded-full w-7 h-7 object-cover"
+                                src={currentUser.profilePicture}
+                            />
+                        ) : (
+                            <li>Sign In</li>
+                        )}
                     </Link>
                 </ul>
             </div>
